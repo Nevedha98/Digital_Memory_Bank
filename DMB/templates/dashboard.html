@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <title>Dashboard</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #eef2f3, #dfe9f3);
+            margin: 0;
+            padding: 0;
+        }
+
+        /* HEADINGS */
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+            color: #333;
+        }
+
+        /* SECTION */
+        .section {
+            width: 90%;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        /* FORM CARD */
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* INPUTS */
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        /* BUTTONS */
+        button {
+            padding: 10px 18px;
+            margin: 5px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(to right, #4CAF50, #2ecc71);
+            color: white;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        #stopBtn {
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* SEARCH BAR */
+        #searchForm {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        #searchForm input {
+            flex: 1;
+        }
+
+        /* VOICE TITLE */
+        #voiceTitle {
+            width: 100%;
+        }
+
+        /* MEMORY GRID */
+        .memory-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        /* MEMORY CARD */
+        .memory-card {
+            background: white;
+            padding: 15px;
+            border-radius: 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* MEDIA */
+        .memory-card img,
+        .memory-card audio {
+            width: 100%;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        /* DELETE BUTTON */
+        .delete-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .x-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .delete-btn:hover {
+            background: darkred;
+        }
+
+        .memory-card p {
+    text-align: center;
+    overflow: hidden;
+    line-height: 1.4;
+    max-height: calc(1.4em * 2); /* limits to 2 lines */
+}
+
+        .memory-text.full {
+            display: block;
+        }
+
+        /* READ BUTTON */
+        .read-btn {
+            background: none;
+            color: #4CAF50;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        /* MODAL */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 15px;
+            text-align: center;
+            max-height: 80vh;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .close {
+            position: sticky;
+            top: 0;
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            background: white;
+            z-index: 10;
+        }
+
+        .modal-content img,
+        .modal-content audio {
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 10px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 18px;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            #searchForm {
+                flex-direction: column;
+            }
+        }
+
+        /* CENTER BUTTONS */
+        .center-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 style="font-family:'Times New Roman', Times, serif;">Upload Memory</h1>
+
+    <!-- Upload Form -->
+    <form method="POST" enctype="multipart/form-data">
+        <input type="text" name="title" placeholder="Memory Title" required>
+        <textarea name="description" placeholder="Write your memory..." required></textarea>
+        <input type="file" name="file">
+
+        <div class="center-buttons">
+            <button type="submit">
+                <i class="fas fa-upload"></i> Upload Memory
+            </button>
+        </div>
+    </form>
+
+    <h1 style="font-family:'Times New Roman', Times, serif;">Record a Voice Memory</h1>
+
+    <input type="text" id="voiceTitle" placeholder="Enter Title for Voice Memory (optional)">
+
+    <div class="center-buttons">
+        <button id="recordBtn">
+            <i class="fas fa-microphone"></i> Start Recording
+        </button>
+
+        <button id="stopBtn" disabled>
+            <i class="fas fa-stop"></i> Stop Recording
+        </button>
+    </div>
+
+    <a id="downloadLink" style="display:none;">Download Audio</a>
+
+    <!-- Search Form -->
+    <form method="POST" id="searchForm">
+        <input type="text" name="search" placeholder="Search memories...">
+        <button type="submit">Search</button>
+        <button type="button" onclick="startVoice()">🎤 Speak</button>
+    </form>
+
+    <h1 style="font-family:'Times New Roman', Times, serif;">All Memories</h1>
+
+    <div class="memory-container">
+        {% for memory in memories %}
+        <div class="memory-card"
+             data-title="{{ memory[1] }}"
+             data-desc="{{ memory[2] }}"
+             data-file="{{ memory[3] }}"
+             onclick="openModal(this)">
+
+            <h3>{{ memory[1] }}</h3>
+            <p class="memory-text short">{{ memory[2] }}</p>
+
+            <button class="read-btn">Read More</button>
+
+            {% if memory[3] %}
+    {% set filename = memory[3].split('/')[-1].split('\\')[-1] %}
+
+    {% if filename.endswith(('.png','.jpg','.jpeg','.gif')) %}
+        <img src="{{ url_for('uploaded_file', filename=filename) }}">
+        
+    {% elif filename.endswith(('.wav','.mp3','.ogg')) %}
+        <audio controls>
+            <source src="{{ url_for('uploaded_file', filename=filename) }}">
+        </audio>
+    {% endif %}
+{% endif %}
+
+            <a href="/delete/{{ memory[0] }}" onclick="event.stopPropagation();">
+                <button class="delete-btn">
+                    <div class="x-icon">✖</div>
+                </button>
+            </a>
+
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Modal -->
+    <div id="memoryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+
+            <h2 id="modalTitle"></h2>
+            <p id="modalDesc"></p>
+
+            <img id="modalImg" style="display:none;">
+            <audio id="modalAudio" controls style="display:none;"></audio>
+        </div>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        const recordBtn = document.getElementById('recordBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const downloadLink = document.getElementById('downloadLink');
+
+        recordBtn.onclick = async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.start();
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = e => {
+                audioChunks.push(e.data);
+            };
+
+            mediaRecorder.onstop = async () => {
+                const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                const audioUrl = URL.createObjectURL(audioBlob);
+
+                downloadLink.href = audioUrl;
+                downloadLink.download = 'memory.wav';
+                downloadLink.style.display = 'block';
+
+                const formData = new FormData();
+                const titleInput = document.getElementById("voiceTitle").value;
+
+                formData.append('audio', audioBlob, 'memory.wav');
+                formData.append('title', titleInput);
+
+                await fetch('/save_audio', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                location.reload();
+            };
+
+            recordBtn.disabled = true;
+            stopBtn.disabled = false;
+        };
+
+        stopBtn.onclick = () => {
+            mediaRecorder.stop();
+            recordBtn.disabled = false;
+            stopBtn.disabled = true;
+        };
+
+        function startVoice() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Use Google Chrome for voice search");
+                return;
+            }
+
+            const recognition = new webkitSpeechRecognition();
+
+            recognition.lang = "en-IN";
+            recognition.interimResults = false;
+            recognition.maxAlternatives = 1;
+
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const text = event.results[0][0].transcript;
+                document.querySelector("input[name='search']").value = text;
+            };
+        }
+
+        function openModal(card) {
+            const title = card.getAttribute("data-title");
+            const desc = card.getAttribute("data-desc");
+            const filePath = card.getAttribute("data-file");
+
+            document.getElementById("memoryModal").style.display = "block";
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalDesc").innerText = desc;
+
+            const img = document.getElementById("modalImg");
+            const audio = document.getElementById("modalAudio");
+
+            img.style.display = "none";
+            audio.style.display = "none";
+
+            if (filePath.match(/\.(jpg|jpeg|png|gif)$/)) {
+                img.src = "/" + filePath;
+                img.style.display = "block";
+            } else if (filePath.match(/\.(mp3|wav|ogg)$/)) {
+                audio.src = "/" + filePath;
+                audio.style.display = "block";
+            }
+        }
+
+        function closeModal() {
+            document.getElementById("memoryModal").style.display = "none";
+        }
+    </script>
+
+</body>
+</html>

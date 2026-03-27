@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Memory Bank</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right, #4facfe, #00f2fe);
+}
+
+/* MAIN CARD */
+.container {
+    text-align: center;
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 90%;
+    max-width: 350px;
+}
+
+/* ICON */
+.icon {
+    font-size: 60px;
+    color: #4facfe;
+    margin-bottom: 15px;
+}
+
+/* TITLE */
+h1 {
+    margin-bottom: 10px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+/* DESCRIPTION */
+p {
+    color: gray;
+    font-size: 14px;
+}
+
+/* BUTTONS */
+.btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    border-radius: 25px;
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+/* LOGIN BUTTON */
+.login-btn {
+    background: linear-gradient(to right, #ff512f, #dd2476);
+}
+
+/* REGISTER BUTTON */
+.register-btn {
+    background: linear-gradient(to right, #00bbff, #11ff90);
+}
+
+.btn:hover {
+    transform: scale(1.05);
+}
+
+body {
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 350px;
+        }
+
+        /* 🔥 ADD THIS AT THE END */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1, h2 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="icon">
+        <i class="fas fa-book-open"></i>
+    </div>
+
+    <h1>Digital Memory Bank</h1>
+    <p>Store your memories with photos, text & voice 🎤</p>
+
+    <a href="/login" class="btn login-btn">
+        <i class="fas fa-sign-in-alt"></i> Login
+    </a>
+
+    <a href="/register" class="btn register-btn">
+        <i class="fas fa-user-plus"></i> Register
+    </a>
+</div>
+
+</body>
+</html>
